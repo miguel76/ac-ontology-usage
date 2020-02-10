@@ -1,0 +1,11 @@
+PREFIX ac: <https://w3id.org/ac-ontology/aco#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX ex_scheme: <http://example.org/schemes/>
+
+SELECT ?playWellAudioClip
+WHERE {
+    $currAudioClip ac:audioCategory ?category.
+    ?category skos:inScheme ex_scheme:playWellAlong.
+    ?playWellAudioClip a ac:AudioClip;
+        ac:audioCategory ?category.
+}

@@ -1,0 +1,12 @@
+PREFIX ac: <https://w3id.org/ac-ontology/aco#>
+PREFIX mo: <http://purl.org/ontology/mo/>
+PREFIX ex_genre: <http://example.org/genres/>
+PREFIX ex_instr: <http://example.org/instr/>
+
+SELECT ?audioClip
+WHERE {
+    ?audioClip a ac:AudioClip;
+        mo:genre ex_genre:funk;
+        mo:tempo "slow";
+        mo:instrumentation ex_instr:instrumental.
+}

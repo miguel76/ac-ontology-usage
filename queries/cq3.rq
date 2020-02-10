@@ -1,0 +1,31 @@
+PREFIX ac: <https://w3id.org/ac-ontology/aco#>
+PREFIX mo: <http://purl.org/ontology/mo/>
+PREFIX mit: <http://purl.org/ontology/mo/mit#>
+PREFIX afo: <https://w3id.org/afo/onto/1.1#>
+PREFIX afv: <https://w3id.org/afo/vocab/1.1#>
+PREFIX ebu: <http://www.ebu.ch/metadata/ontolog...>
+PREFIX ex_tag: <http://example.org/tags/>
+PREFIX ex_genre: <http://example.org/genres/>
+
+SELECT ?audioClip ?audioFileHqUrl
+WHERE {
+    ?audioClip a ac:AudioClip;
+        ac:audioCategory ex_tag:loop;
+        mo:tempo "very high";
+        mo:genre ex_genre:rock;
+        mo:instrument mit:Percussion_instruments;
+        ac:publicationOf/ac:audioFeature [
+            a afv:Key;
+            afo:value "F minor";
+            afo:confidence ?keyConfidence
+        ];
+        ac:availableAs [
+            a ac:AudioFile;
+            ebu:locator ?audioFileHqUrl;
+            ebu:bitRate ?bitRate;
+            ebu:hasAudioEncodingFormat ?enc
+        ].
+    FILTER(?keyConfidence > 0.5).
+    FILTER(?enc IN (encoding_ogg:, encoding_mp3:)).
+    FILTER(?bitRate > 100000).
+}

@@ -1,0 +1,62 @@
+# 1.  Which are the songs that are slow (tempo) funk(genre) tracks without
+#     vocals (instrumentation)?
+
+SELECT ?audioClip
+WHERE {
+    ?audioClip a ac:AudioClip;
+        ac:audioCategory tempo:slow, genre:funk, vocalsinstrumental:instrumental.
+}
+
+# 2.  What  other  tracks  “play  well”  together  with a given song in a
+#     playlist (e.g., are in the same category according to some classification)?
+
+SELECT ?playWellAudioClip
+WHERE {
+    $currAudioClip ac:audioCategory ?playWellAlongCategory.
+    ?playWellAlongCategory skos:inScheme ex:playWellAlongScheme
+    ?playWellAudioClip a ac:AudioClip;
+        ac:audioCategory ?playWellAlongCategory.
+}
+
+# 3.  Retrieve high-quality (sample rate, bits per sample)  audio  loops  (type
+#     of  audio  content)  for a given instrument type, genre, key, tempo.
+
+SELECT ?audioClip
+WHERE {
+    ?audioClip a ac:AudioClip;
+        ac:audioCategory tag:loop, tempo:veryhigh, genre:rock, instruments:percussion;
+        ac:publicationOf/ac:audioFeature [
+            a afv:Key;
+            afo:value "F minor";
+            afo:confidence ?keyEstimationConfidence
+        ].
+    FILTER(?keyEstimationConfidence > 0.5).
+}
+
+
+# 4.  Retrieve high-quality (sample rate, bits per sam-ple) sound effects
+#     (type of audio content) for a given effect type, mood, and a set of
+#     perceptualfeatures (e.g., warm and bright).
+
+SELECT ?audioClip ?audioFileHqUrl
+WHERE {
+    ?audioClip a ac:AudioClip;
+        ac:audioCategory tag:effect, mood:sad.
+        ac:availableAs [
+             a ac:AudioFile;
+            ebu:locator ?audioFileHqUrl;
+            ebu:bitRate ?bitRate;
+            ebu:hasAudioEncodingFormat ?supportedEncodingFormat
+        ]
+    FILTER(?supportedEncodingFormat IN (encoding_ogg:, encoding_mp3:)).
+    FILTER(?bitRate > 100000).
+    # warmth and brightness [0-100]
+}
+
+# ebu:sampleSize ?signalBitsPerSample;
+# ebu:sampleRate ?signalSampleRate
+# ]
+# ac:publicationOf [
+#     ac:sampleRate ?sampleRate; # 44100.0
+#     ac:bitsPerSample ?bitsPerSample # 8
+# ].

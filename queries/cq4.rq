@@ -1,0 +1,30 @@
+PREFIX ac: <https://w3id.org/ac-ontology/aco#>
+PREFIX ebu: <http://www.ebu.ch/metadata/ontolog...>
+PREFIX afo: <https://w3id.org/afo/onto/1.1#>
+PREFIX afv: <https://w3id.org/afo/vocab/1.1#>
+PREFIX ex_tag: <http://example.org/tags/>
+PREFIX ex_mood: <http://example.org/moods/>
+
+SELECT ?audioClip ?audioFileHqUrl
+WHERE {
+    ?audioClip a ac:AudioClip;
+        ac:audioCategory ex_tag:effect,
+                         ex_mood:happy.
+        ac:publicationOf/ac:audioFeature [
+            a afv:Brightness;
+            afo:value ?brightness
+        ], [
+            a afv:Warmth;
+            afo:value ?warmth
+        ];
+        ac:availableAs [
+            a ac:AudioFile;
+            ebu:locator ?audioFileHqUrl;
+            ebu:bitRate ?bitRate;
+            ebu:hasAudioEncodingFormat ?enc
+        ].
+    FILTER(?brightness > 65).
+    FILTER(?warmth > 50).
+    FILTER(?enc IN (encoding_ogg:, encoding_mp3:)).
+    FILTER(?bitRate > 100000).
+}
